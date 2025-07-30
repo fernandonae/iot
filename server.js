@@ -59,7 +59,9 @@ app.post('/api/movimiento', async (req, res) => {
 
 
 function formatearFecha(timestamp) {
-  const fecha = new Date(timestamp);
+  // Multiplicamos por 1000 para convertir segundos a milisegundos
+  const fecha = new Date(timestamp * 1000); 
+
   const dia = fecha.getDate().toString().padStart(2, '0');
   const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
   const anio = fecha.getFullYear();
@@ -75,6 +77,7 @@ function formatearFecha(timestamp) {
 
   return `${dia}/${mes}/${anio}, ${horasStr}:${minutos}:${segundos} ${ampm}`;
 }
+
 
 
 // Nueva ruta GET para obtener los últimos movimientos
