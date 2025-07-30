@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Registro de Movimientos PIR</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f0f2f5;
+      padding: 20px;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #contenedor {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+
+    .registro {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .registro:last-child {
+      border-bottom: none;
+    }
+
+    .registro strong {
+      color: #444;
+    }
+
+    .sin-datos {
+      text-align: center;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <h1>📊 Registro de Movimientos PIR</h1>
+  <div id="contenedor">
+    <p class="sin-datos">Cargando datos...</p>
+  </div>
+
+  <script>
+    const contenedor = document.getElementById('contenedor');
+
+    async function obtenerMovimientos() {
+      try {
+        const res = await fetch('https://iot-xxeg.onrender.com//api/datos'); // ← reemplaza con tu URL real
+        const datos = await res.json();
+
+        contenedor.innerHTML = '';
+
+        if (datos.length === 0) {
+          contenedor.innerHTML = '<p class="sin-datos">No hay movimientos registrados.</p>';
+          return;
+        }
+
+        datos.forEach(item => {
+          const div = document.createElement('div');
+          div.className = 'registro';
+
+          const fecha = new Date(item.timestamp * 1000).toLocaleString();
+
+          div.innerHTML = `
+            <strong>Sensor:</strong> ${item.sensor || 'N/A'}<br>
+            <strong>Movimiento:</strong> ${item.movimiento ? '✔️ Sí' : '❌ No'}<br>
+            <strong>Confianza:</strong> ${item.confidence != null ? (item.confidence * 100).toFixed(1) + '%' : 'N/A'}<br>
+            <strong>Dispositivo:</strong> ${item.deviceId || 'N/A'}<br>
+            <strong>Fecha:</strong> ${fecha}
+          `;
+
+          contenedor.appendChild(div);
+        });
+      } catch (err) {
+        console.error('Error al obtener los datos:', err);
+        contenedor.innerHTML = '<p class="sin-datos">Error al cargar los datos.</p>';
+      }
+    }
+
+    obtenerMovimientos();
+    setInterval(obtenerMovimientos, 5000); // Actualiza cada 5 segundos
+  </script>
+</body>
+</html>
