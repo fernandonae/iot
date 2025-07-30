@@ -2,9 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 const API_KEY = process.env.API_KEY;
@@ -12,6 +16,7 @@ const API_KEY = process.env.API_KEY;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI, {
