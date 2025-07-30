@@ -76,8 +76,10 @@
             <strong>Sensor:</strong> ${item.sensor || 'N/A'}<br>
             <strong>Movimiento:</strong> ${item.movimiento ? '✔️ Sí' : '❌ No'}<br>
             <strong>Confianza:</strong> ${item.confidence != null ? (item.confidence * 100).toFixed(1) + '%' : 'N/A'}<br>
-            <strong>Dispositivo:</strong> ${item.deviceId || 'N/A'}<br>
-            <strong>Fecha:</strong> ${fecha}
+            <strong>Dirección IP:</strong> ${item.deviceId || 'N/A'}<br>
+
+            <strong>Fecha:</strong> <span style="color:#666">${fecha}</span>
+
           `;
 
           contenedor.appendChild(div);
