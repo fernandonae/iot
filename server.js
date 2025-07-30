@@ -43,15 +43,19 @@ app.post('/api/movimiento', async (req, res) => {
   }
 
   try {
-    const nuevoMovimiento = new Movimiento(req.body);
+    const nuevoMovimiento = new Movimiento({
+      ...req.body,
+      timestamp: Date.now(), // ✅ timestamp real
+    });
     await nuevoMovimiento.save();
-    console.log('📥 Movimiento recibido y guardado:', req.body);
+    console.log('📥 Movimiento recibido y guardado:', nuevoMovimiento);
     res.status(200).json({ message: 'Movimiento guardado correctamente' });
   } catch (err) {
     console.error('❌ Error al guardar movimiento:', err);
     res.status(500).json({ error: 'Error del servidor' });
   }
 });
+
 
 
 function formatearFecha(timestamp) {
