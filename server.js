@@ -48,6 +48,22 @@ app.post('/api/movimiento', async (req, res) => {
   }
 });
 
+
+// Nueva ruta GET para obtener los últimos movimientos
+app.get('/api/datos', async (req, res) => {
+  try {
+    const movimientos = await Movimiento.find()
+      .sort({ timestamp: -1 })  // ordena por fecha más reciente
+      .limit(20);               // puedes ajustar cuántos quieres mostrar
+
+    res.json(movimientos);
+  } catch (err) {
+    console.error('❌ Error al obtener los datos:', err);
+    res.status(500).json({ error: 'Error al obtener los datos' });
+  }
+});
+
+
 // Ruta de prueba
 app.get('/', (req, res) => {
   res.send('Servidor de Movimiento funcionando ✅');
