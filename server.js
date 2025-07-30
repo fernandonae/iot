@@ -54,19 +54,44 @@ app.post('/api/movimiento', async (req, res) => {
 });
 
 
+function formatearFecha(timestamp) {
+  const fecha = new Date(timestamp);
+  const dia = fecha.getDate().toString().padStart(2, '0');
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+  const anio = fecha.getFullYear();
+
+  let horas = fecha.getHours();
+  const minutos = fecha.getMinutes().toString().padStart(2, '0');
+  const segundos = fecha.getSeconds().toString().padStart(2, '0');
+
+  const ampm = horas >= 12 ? 'p.m.' : 'a.m.';
+  horas = horas % 12;
+  horas = horas ? horas : 12;
+  const horasStr = horas.toString().padStart(2, '0');
+
+  return `${dia}/${mes}/${anio}, ${horasStr}:${minutos}:${segundos} ${ampm}`;
+}
+
+
 // Nueva ruta GET para obtener los últimos movimientos
 app.get('/api/datos', async (req, res) => {
   try {
     const movimientos = await Movimiento.find()
-      .sort({ timestamp: -1 })  // ordena por fecha más reciente
-      .limit(20);               // puedes ajustar cuántos quieres mostrar
+      .sort({ timestamp: -1 })
+      .limit(20);
 
-    res.json(movimientos);
+    const movimientosFormateados = movimientos.map(mov => ({
+      ...mov.toObject(),
+      fechaFormateada: formatearFecha(mov.timestamp),
+    }));
+
+    res.json(movimientosFormateados);
   } catch (err) {
     console.error('❌ Error al obtener los datos:', err);
     res.status(500).json({ error: 'Error al obtener los datos' });
   }
 });
+
 
 
 // Ruta de prueba
