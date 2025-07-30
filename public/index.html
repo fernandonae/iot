@@ -70,7 +70,7 @@
           const div = document.createElement('div');
           div.className = 'registro';
 
-          const fecha = new Date(item.timestamp).toLocaleString();
+          const fecha = new Date(item.timestamp*1000).toLocaleString();
 
           div.innerHTML = `
             <strong>Sensor:</strong> ${item.sensor || 'N/A'}<br>
